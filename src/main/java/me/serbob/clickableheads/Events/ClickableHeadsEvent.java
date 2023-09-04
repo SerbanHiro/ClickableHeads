@@ -37,7 +37,6 @@ public class ClickableHeadsEvent implements Listener {
             }
             Player target=Core.checkSkull(item);
 
-            List<String> test = new ArrayList<>();
             if(target!=null) {
                 ClickableHead clickableHead = new ClickableHead(
                         target,
