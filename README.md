@@ -61,3 +61,28 @@ dependencies {
 }
 </details>
 ```
+
+### Creating a Clickable Head
+
+Creating a clickable head is straightforward. Here's an example of how to do it:
+```java
+// Import necessary classes
+
+// Create a clickable head for a player
+Player targetPlayer = ...; // Get the target player
+String headName = "Custom Head";
+List<String> lore = Arrays.asList("Lore line 1", "Lore line 2");
+
+ClickableHead clickableHead = new ClickableHead(targetPlayer, headName, lore);
+
+if (clickableHead.isClickableHead()) {
+    // Initialize the GUI
+    clickableHead.initializeGUI(playerInventoryHolder, 36, "Statistics");
+
+    // Add items to the GUI
+    generateClickableHeadGUI(clickableHead);
+
+    // Open the GUI for a player
+    clickableHead.openGUI(player);
+}
+```
