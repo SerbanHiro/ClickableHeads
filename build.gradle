@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+apply plugin: 'maven-publish'
+
 group = 'me.serbob'
 version = '1.0'
 
@@ -14,6 +16,10 @@ repositories {
     maven {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
+    }
+    maven {
+        name = "Jitpack"
+        url 'https://jitpack.io'
     }
 }
 
