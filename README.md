@@ -59,8 +59,8 @@ dependencies {
     // Add ClickableHeads as a dependency
     implementation 'com.github.SerbanHiro:ClickableHeads:VERSION' // Replace with the desired version
 }
-</details>
 ```
+</details>
 
 ### Creating a Clickable Head
 
@@ -84,5 +84,81 @@ if (clickableHead.isClickableHead()) {
 
     // Open the GUI for a player
     clickableHead.openGUI(player);
+}
+```
+### Creating a small GUI with it
+
+Creating a small GUI interface to view the player and open a Statistics GUI is quite easy:
+```java
+public class ClickableHeadsEvent implements Listener {
+    @EventHandler
+    public void checkHead(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        ItemStack item= event.getCurrentItem();
+        InventoryHolder holder = event.getWhoClicked().getOpenInventory().getTopInventory().getHolder();
+        if(holder instanceof MainHolder) {
+            if (item == null) {
+                return;
+            }
+            if (item.getType() == null) {
+                return;
+            }
+            if (item.getType() == Material.AIR) {
+                return;
+            }
+            Player target=Core.checkSkull(item);
+
+            List<String> test = new ArrayList<>();
+            if(target!=null) {
+                ClickableHead clickableHead = new ClickableHead(
+                        target,
+                        target.getName(),
+                        Collections.emptyList()
+                );
+                if (clickableHead.isClickableHead()) {
+                    clickableHead.initializeGUI(new MainHolder(), 36, "              Statistics");
+
+                    generateClickableHeadGUI(clickableHead);
+
+                    player.sendMessage(clickableHead.getName());
+
+                    clickableHead.openGUI(player);
+                }
+            }
+            if(ChatColor.stripColor(item.getItemMeta().getDisplayName()).equalsIgnoreCase("back")) {
+                InventoryManager.openGUI(player);
+            }
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * This is just an example, you can add whatever parameters you want
+     * @param clickableHead
+     */
+    public void generateClickableHeadGUI(ClickableHead clickableHead) {
+        Player target = clickableHead.getPlayer();
+        List<String> test = new ArrayList<>();
+        test.add("&aCurrent kills: &f" + target.getStatistic(Statistic.PLAYER_KILLS));
+        clickableHead.addItem(10, Core.createItem(
+                Material.valueOf("DIAMOND_SWORD"),
+                "&e&lPLAYER KILLS",
+                test
+        ));
+        test = new ArrayList<>();
+        test.add("&aHere you can see player's statistics");
+        clickableHead.addItem(31, Core.createItem(
+                Material.valueOf("ARROW"),
+                "&e&lINFO",
+                test
+        ));
+        test = new ArrayList<>();
+        test.add("Go back");
+        clickableHead.addItem(32, Core.createItem(
+                Material.valueOf("BARRIER"),
+                "&cBACK",
+                test
+        ));
+    }
 }
 ```
