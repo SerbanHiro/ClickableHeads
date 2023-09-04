@@ -37,7 +37,7 @@ Add ClickableHeads as a dependency:
     <dependency>
         <groupId>com.github.SerbanHiro</groupId>
         <artifactId>ClickableHeads</artifactId>
-        <version>1.0.1</version> <!-- Replace with the desired version -->
+        <version>VERSION</version> <!-- Replace with the desired version -->
     </dependency>
 </dependencies>
 ```
@@ -57,7 +57,7 @@ Add ClickableHeads as a dependency:
 ```groovy
 dependencies {
     // Add ClickableHeads as a dependency
-    implementation 'com.github.SerbanHiro:ClickableHeads:1.0.1' // Replace with the desired version
+    implementation 'com.github.SerbanHiro:ClickableHeads:VERSION' // Replace with the desired version
 }
 </details>
 ```
