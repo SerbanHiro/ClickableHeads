@@ -3,6 +3,7 @@
 [![](https://jitpack.io/v/SerbanHiro/ClickableHeads.svg)](https://jitpack.io/#SerbanHiro/ClickableHeads)
 
 ClickableHeads is a versatile Minecraft plugin that allows you to create interactive player heads with ease. Whether you want to display statistics, information, or any other player-specific details, ClickableHeads simplifies the process.
+![ClickableHeads Custom GUI](https://i.imgur.com/D67feto.png)
 
 ## Features
 
