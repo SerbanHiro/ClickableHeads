@@ -60,13 +60,12 @@ public class ClickableHeadsEvent implements Listener {
             event.setCancelled(true);
         }
     }
-
     /**
      * This is just an example, you can add whatever parameters you want
      * @param clickableHead
      */
     public void generateClickableHeadGUI(ClickableHead clickableHead) {
-        Player target = clickableHead.getPlayer();
+        Player target = clickableHead.getPlayer().getPlayer();
         List<String> test = new ArrayList<>();
         test.add("&aCurrent kills: &f" + target.getStatistic(Statistic.PLAYER_KILLS));
         clickableHead.addItem(10, Core.createItem(

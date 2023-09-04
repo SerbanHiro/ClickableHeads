@@ -5,6 +5,7 @@ import me.serbob.clickableheads.Managers.VersionManager;
 import me.serbob.clickableheads.Utils.GlobalUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -17,11 +18,11 @@ import java.util.List;
 
 public class ClickableHead {
     private Inventory GUI;
-    private final Player player;
+    private final OfflinePlayer player;
     private final ItemStack head;
     private final String name;
     private final List<String> lore;
-    public ClickableHead(Player player,
+    public ClickableHead(OfflinePlayer player,
                          String name,
                          List<String> lore
                           ) {
@@ -34,7 +35,7 @@ public class ClickableHead {
     public boolean isClickableHead() {
         return head!=null;
     }
-    public Player getPlayer() {
+    public OfflinePlayer getPlayer() {
         return player;
     }
     public ItemStack getHead() {
@@ -55,7 +56,6 @@ public class ClickableHead {
     public void initializeGUI(InventoryHolder inventoryHolder, int size, String title) {
         GUI= Bukkit.createInventory(inventoryHolder,size,title);
     }
-
     /**
      * Add item inside the GUI after it has been initialized
      * @param position
@@ -89,7 +89,7 @@ public class ClickableHead {
      * @param lore
      * @return headItem
      */
-    private ItemStack getAllVersionsSkull(Player player, String name, List<String> lore) {
+    private ItemStack getAllVersionsSkull(OfflinePlayer player, String name, List<String> lore) {
         ItemStack headItem;
         if (!VersionManager.isVersion1_12OrBelow()) {
             // For Minecraft versions 1.13 and onwards
