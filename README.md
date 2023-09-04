@@ -21,7 +21,6 @@ Open your project's pom.xml file.
 
 Add the JitPack repository to your repositories section:
 ```xml
-Copy code
 <repositories>
     <!-- Add the JitPack repository -->
     <repository>
@@ -33,7 +32,6 @@ Copy code
 
 Add ClickableHeads as a dependency:
 ```xml
-Copy code
 <dependencies>
     <!-- Add ClickableHeads as a dependency -->
     <dependency>
@@ -46,3 +44,20 @@ Copy code
 </details>
 <details>
 <summary>Setting up ClickableHeads with Gradle</summary>
+Open your project's build.gradle file.
+
+Add the JitPack repository to your repositories block:
+```groovy
+repositories {
+    // Add the JitPack repository
+    maven { url 'https://jitpack.io' }
+}
+```
+Add ClickableHeads as a dependency:
+```groovy
+dependencies {
+    // Add ClickableHeads as a dependency
+    implementation 'com.github.SerbanHiro:ClickableHeads:1.0.1' // Replace with the desired version
+}
+</details>
+```
