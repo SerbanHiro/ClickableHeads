@@ -163,3 +163,4 @@ public class ClickableHeadsEvent implements Listener {
     }
 }
 ```
+![ClickableHeads Statistics](https://i.imgur.com/0Tl1uws.png)
