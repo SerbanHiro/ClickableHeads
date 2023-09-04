@@ -1,0 +1,8 @@
+name: ClickableHeads
+version: '${version}'
+main: me.serbob.clickableheads.ClickableHeads
+api-version: '1.13'
+commands:
+  clickableheads:
+    permission: clickableheads.test
+    description: Test
