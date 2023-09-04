@@ -15,10 +15,34 @@ ClickableHeads is a versatile Minecraft plugin that allows you to create interac
 
 ### Setting up ClickableHeads
 
-To get started with ClickableHeads, make sure to include it as a dependency in your plugin's `build.gradle` file:
-
 <details>
 <summary>Setting up ClickableHeads with Maven</summary>
 Open your project's pom.xml file.
 
 Add the JitPack repository to your repositories section:
+```xml
+Copy code
+<repositories>
+    <!-- Add the JitPack repository -->
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+Add ClickableHeads as a dependency:
+```xml
+Copy code
+<dependencies>
+    <!-- Add ClickableHeads as a dependency -->
+    <dependency>
+        <groupId>com.github.SerbanHiro</groupId>
+        <artifactId>ClickableHeads</artifactId>
+        <version>1.0.1</version> <!-- Replace with the desired version -->
+    </dependency>
+</dependencies>
+```
+</details>
+<details>
+<summary>Setting up ClickableHeads with Gradle</summary>
