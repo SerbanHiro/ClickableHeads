@@ -74,7 +74,7 @@ Player targetPlayer = ...; // Get the target player
 String headName = "Custom Head";
 List<String> lore = Arrays.asList("Lore line 1", "Lore line 2");
 
-ClickableHead clickableHead = new ClickableHead(targetPlayer, headName, lore);
+ClickableHead clickableHead = new ClickableHead(Bukkit.getOfflinePlayer(target.getUniqueId()), headName, lore);
 
 if (clickableHead.isClickableHead()) {
     // Initialize the GUI
@@ -113,7 +113,6 @@ public class ClickableHeadsEvent implements Listener {
             }
             Player target=Core.checkSkull(item);
 
-            List<String> test = new ArrayList<>();
             if(target!=null) {
                 ClickableHead clickableHead = new ClickableHead(
                         target,
@@ -136,13 +135,12 @@ public class ClickableHeadsEvent implements Listener {
             event.setCancelled(true);
         }
     }
-
     /**
      * This is just an example, you can add whatever parameters you want
      * @param clickableHead
      */
     public void generateClickableHeadGUI(ClickableHead clickableHead) {
-        Player target = clickableHead.getPlayer();
+        Player target = clickableHead.getPlayer().getPlayer();
         List<String> test = new ArrayList<>();
         test.add("&aCurrent kills: &f" + target.getStatistic(Statistic.PLAYER_KILLS));
         clickableHead.addItem(10, Core.createItem(
