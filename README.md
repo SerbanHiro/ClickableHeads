@@ -81,7 +81,11 @@ if (clickableHead.isClickableHead()) {
     clickableHead.initializeGUI(playerInventoryHolder, 36, "Statistics");
 
     // Add items to the GUI
-    generateClickableHeadGUI(clickableHead);
+    clickableHead.addItem(31, Core.createItem(
+                Material.valueOf("ARROW"),
+                headName,
+                lore
+        ));
 
     // Open the GUI for a player
     clickableHead.openGUI(player);
