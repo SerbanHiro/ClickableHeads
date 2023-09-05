@@ -23,8 +23,14 @@ gui:
     name: "&b&lBLOCKS BROKEN"
     lore:
       - "&fCurrent blocks broken: &a{MINE_BLOCK}"
+  blocks_placed:
+    position: 14
+    material: "DIRT"
+    name: "&8&lBLOCKS PLACED"
+    lore:
+      - "&fCurrent blocks broken: &a{PLACED_BLOCK}"
   playtime:
-    position: 15
+    position: 16
     material: "COMPASS"
     name: "&6&lPLAYTIME"
     lore:
@@ -38,6 +44,6 @@ gui:
   back: # If you want to use this, for the moment make sure the name has "BACK" inside it
     position: 32
     material: "BARRIER"
-    name: "&4&lBACK"
+    name: "&c&lBACK"
     lore:
       - "&fClick to return"

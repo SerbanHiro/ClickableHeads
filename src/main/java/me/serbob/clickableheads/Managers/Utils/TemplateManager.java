@@ -48,7 +48,7 @@ public class TemplateManager {
     }
     public static String replacePlayerStatisticPlaceholder(Player player, String input) {
         input = input.replace("{playerName}",player.getName());
-        System.out.println(getTotalBlocksMined(player)+"");
+        //System.out.println(getTotalBlocksMined(player)+"");
         while (input.contains("{") && input.contains("}")) {
             int startIndex = input.indexOf("{");
             int endIndex = input.indexOf("}");
@@ -60,13 +60,15 @@ public class TemplateManager {
                 try {
                     Statistic statistic;
                     String formattedValue;
-
                     switch (statisticName.toUpperCase()) {
                         case "MINE_BLOCK":
                             formattedValue = formatDouble(getTotalBlocksMined(player));
                             break;
                         case "KILL_ENTITY":
                             formattedValue = formatDouble(getTotalMobsKilled(player));
+                            break;
+                        case "PLACED_BLOCK":
+                            formattedValue = formatDouble(getTotalBlocksPlaced(player));
                             break;
                         default:
                             statistic = Statistic.valueOf(statisticName.toUpperCase());
@@ -199,5 +201,17 @@ public class TemplateManager {
         }
 
         return totalKills;
+    }
+    public static int getTotalBlocksPlaced(Player player) {
+        Statistic statistic = Statistic.USE_ITEM; // This statistic covers block placement
+        int totalPlaced = 0;
+
+        for (Material material : Material.values()) {
+            if (material.isBlock()) { // Only consider block materials
+                totalPlaced += player.getStatistic(statistic, material);
+            }
+        }
+
+        return totalPlaced;
     }
 }
