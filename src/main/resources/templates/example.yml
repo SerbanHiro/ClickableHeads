@@ -1,0 +1,43 @@
+gui:
+  player_kills:
+    position: 10
+    material: "DIAMOND_SWORD"
+    name: "&b&lPLAYER KILLS"
+    lore:
+      - "&fCurrent kills: &a{PLAYER_KILLS}"
+  deaths:
+    position: 11
+    material: "SKELETON_SKULL"
+    name: "&7&lDEATHS"
+    lore:
+      - "&fCurrent deaths: &a{DEATHS}"
+  mobs_killed:
+    position: 12
+    material: "ZOMBIE_HEAD"
+    name: "&2&lMOBS KILLED"
+    lore:
+      - "&fCurrent mob kills: &a{KILL_ENTITY}"
+  blocks_broken:
+    position: 13
+    material: "DIAMOND_PICKAXE"
+    name: "&b&lBLOCKS BROKEN"
+    lore:
+      - "&fCurrent blocks broken: &a{MINE_BLOCK}"
+  playtime:
+    position: 15
+    material: "COMPASS"
+    name: "&6&lPLAYTIME"
+    lore:
+      - "&fCurrent playtime: &a{PLAY_ONE_MINUTE}"
+  info:
+    position: 31
+    material: "ARROW"
+    name: "&e&lINFO"
+    lore:
+      - "&fUser statistics"
+  back: # If you want to use this, for the moment make sure the name has "BACK" inside it
+    position: 32
+    material: "BARRIER"
+    name: "&4&lBACK"
+    lore:
+      - "&fClick to return"

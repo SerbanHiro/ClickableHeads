@@ -4,15 +4,19 @@ import me.serbob.clickableheads.Classes.ClickableHead;
 import me.serbob.clickableheads.Managers.Core;
 import me.serbob.clickableheads.Managers.Inventory.InventoryManager;
 import me.serbob.clickableheads.Managers.Inventory.MainHolder;
+import me.serbob.clickableheads.Managers.Utils.TemplateManager;
+import me.serbob.clickableheads.Utils.GlobalUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
@@ -46,7 +50,9 @@ public class ClickableHeadsEvent implements Listener {
                 if (clickableHead.isClickableHead()) {
                     clickableHead.initializeGUI(new MainHolder(), 36, "              Statistics");
 
-                    generateClickableHeadGUI(clickableHead);
+                    //generateClickableHeadGUI(clickableHead);
+
+                    Core.returnTemplateGUI(clickableHead,"example.yml");
 
                     player.sendMessage(clickableHead.getName());
 
@@ -66,12 +72,34 @@ public class ClickableHeadsEvent implements Listener {
     public void generateClickableHeadGUI(ClickableHead clickableHead) {
         Player target = clickableHead.getPlayer().getPlayer();
         List<String> test = new ArrayList<>();
-        test.add("&aCurrent kills: &f" + target.getStatistic(Statistic.PLAYER_KILLS));
-        clickableHead.addItem(10, Core.createItem(
-                Material.valueOf("DIAMOND_SWORD"),
-                "&e&lPLAYER KILLS",
-                test
-        ));
+        if(TemplateManager.doesTemplateExist("example.yml")) {
+            System.out.println("1");
+            YamlConfiguration templateConfig = TemplateManager.getTemplate("example.yml");
+            System.out.println("2");
+            for (String key : templateConfig.getConfigurationSection("gui").getKeys(false)) {
+                int position = templateConfig.getInt("gui."+key+".position");
+                System.out.println(position+"");
+                Material material = Material.valueOf(templateConfig.getString("gui."+key+".material"));
+                System.out.println(material+"");
+                String name = GlobalUtil.c(TemplateManager.replacePlayerStatisticPlaceholder(target,templateConfig.getString("gui."+key+".name")));
+                System.out.println(name);
+                List<String> lore = new ArrayList<>();
+                for(String loreKey:templateConfig.getStringList("gui."+key+".lore")) {
+                    lore.add(GlobalUtil.c(TemplateManager.replacePlayerStatisticPlaceholder(target,loreKey)));
+                }
+                System.out.println(lore);
+                ItemStack itemStack = new ItemStack(material);
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                itemMeta.setDisplayName(name);
+                itemMeta.setLore(lore);
+                itemStack.setItemMeta(itemMeta);
+                clickableHead.addItem(
+                        position,
+                        itemStack
+                );
+            }
+
+        }
         test = new ArrayList<>();
         test.add("&aHere you can see player's statistics");
         clickableHead.addItem(31, Core.createItem(
