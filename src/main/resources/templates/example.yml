@@ -29,6 +29,12 @@ gui:
     name: "&8&lBLOCKS PLACED"
     lore:
       - "&fCurrent blocks broken: &a{PLACED_BLOCK}"
+  balance:
+    position: 15
+    material: "GOLD_INGOT"
+    name: "&e&lMONEY"
+    lore:
+      - "&fCurrent money: &a{BALANCE}"
   playtime:
     position: 16
     material: "COMPASS"

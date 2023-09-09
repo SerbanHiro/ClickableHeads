@@ -1,5 +1,6 @@
 package me.serbob.clickableheads.Managers.Utils;
 
+import me.serbob.clickableheads.APIs.Vault.EconomyHook;
 import me.serbob.clickableheads.ClickableHeads;
 import me.serbob.clickableheads.Utils.Logger;
 import org.bukkit.Material;
@@ -69,6 +70,12 @@ public class TemplateManager {
                             break;
                         case "PLACED_BLOCK":
                             formattedValue = formatDouble(getTotalBlocksPlaced(player));
+                            break;
+                        case "BALANCE":
+                            formattedValue = " ";
+                            if(EconomyHook.isVaultEnabled()) {
+                                formattedValue = EconomyHook.getFormattedMoney(player);
+                            }
                             break;
                         default:
                             statistic = Statistic.valueOf(statisticName.toUpperCase());
