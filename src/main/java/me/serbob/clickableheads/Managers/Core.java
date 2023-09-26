@@ -5,6 +5,7 @@ import me.serbob.clickableheads.Managers.Utils.TemplateManager;
 import me.serbob.clickableheads.Utils.GlobalUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,15 +24,15 @@ public class Core {
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
-    public static Player checkSkull(ItemStack skull) {
-        Player target = null;
+    public static OfflinePlayer checkSkull(ItemStack skull) {
+        OfflinePlayer target = null;
         try {
-            target = ((SkullMeta) skull.getItemMeta()).getOwningPlayer().getPlayer();
+            target = ((SkullMeta) skull.getItemMeta()).getOwningPlayer();
         }catch (Exception ignored){}
         return target;
     }
     public static void returnTemplateGUI(ClickableHead clickableHead, String templateName) {
-        Player target = clickableHead.getPlayer().getPlayer();
+        OfflinePlayer target = clickableHead.getPlayer();
         if(TemplateManager.doesTemplateExist(templateName)) {
             YamlConfiguration templateConfig = TemplateManager.getTemplate(templateName);
             for (String key : templateConfig.getConfigurationSection("gui").getKeys(false)) {

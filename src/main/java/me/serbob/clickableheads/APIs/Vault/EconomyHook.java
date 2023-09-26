@@ -3,6 +3,7 @@ package me.serbob.clickableheads.APIs.Vault;
 import me.serbob.clickableheads.ClickableHeads;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -28,8 +29,8 @@ public class EconomyHook {
         econ = rsp.getProvider();
         return econ != null;
     }
-    public static String getFormattedMoney(Player player) {
-        double money = getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId()));
+    public static String getFormattedMoney(OfflinePlayer player) {
+        double money = getEconomy().getBalance(player);
         String formattedMoney = getEconomy().currencyNamePlural()+formatMoney(money);
 
         return formattedMoney;

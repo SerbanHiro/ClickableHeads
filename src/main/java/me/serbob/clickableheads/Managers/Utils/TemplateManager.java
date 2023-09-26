@@ -4,6 +4,7 @@ import me.serbob.clickableheads.APIs.Vault.EconomyHook;
 import me.serbob.clickableheads.ClickableHeads;
 import me.serbob.clickableheads.Utils.Logger;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -47,7 +48,7 @@ public class TemplateManager {
             }
         }
     }
-    public static String replacePlayerStatisticPlaceholder(Player player, String input) {
+    public static String replacePlayerStatisticPlaceholder(OfflinePlayer player, String input) {
         input = input.replace("{playerName}",player.getName());
         //System.out.println(getTotalBlocksMined(player)+"");
         while (input.contains("{") && input.contains("}")) {
@@ -184,10 +185,11 @@ public class TemplateManager {
         } else if (number >= 1_000d) {
             return String.format("%.1fK", number / 1_000d);
         } else {
-            return String.format("%.1f", number);
+            //return String.format("%.1f", number);
+            return String.valueOf((int) number);
         }
     }
-    public static int getTotalBlocksMined(Player player) {
+    public static int getTotalBlocksMined(OfflinePlayer player) {
         Statistic statistic = Statistic.MINE_BLOCK;
         int totalMined = 0;
 
@@ -197,7 +199,7 @@ public class TemplateManager {
 
         return totalMined;
     }
-    public static int getTotalMobsKilled(Player player) {
+    public static int getTotalMobsKilled(OfflinePlayer player) {
         Statistic statistic = Statistic.KILL_ENTITY;
         int totalKills = 0;
 
@@ -209,7 +211,7 @@ public class TemplateManager {
 
         return totalKills;
     }
-    public static int getTotalBlocksPlaced(Player player) {
+    public static int getTotalBlocksPlaced(OfflinePlayer player) {
         Statistic statistic = Statistic.USE_ITEM; // This statistic covers block placement
         int totalPlaced = 0;
 

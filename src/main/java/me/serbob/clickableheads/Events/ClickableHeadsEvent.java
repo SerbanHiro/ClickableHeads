@@ -8,6 +8,7 @@ import me.serbob.clickableheads.Managers.Utils.TemplateManager;
 import me.serbob.clickableheads.Utils.GlobalUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -39,15 +40,18 @@ public class ClickableHeadsEvent implements Listener {
             if (item.getType() == Material.AIR) {
                 return;
             }
-            Player target=Core.checkSkull(item);
-
+            OfflinePlayer target=Core.checkSkull(item);
+            //System.out.println(target.getPlayer().getName());
             if(target!=null) {
+                System.out.println("target is not null");
                 ClickableHead clickableHead = new ClickableHead(
                         target,
                         target.getName(),
                         Collections.emptyList()
                 );
+                System.out.println("target initialization");
                 if (clickableHead.isClickableHead()) {
+                    System.out.println("is indeed a ch");
                     clickableHead.initializeGUI(new MainHolder(), 36, "              Statistics");
 
                     //generateClickableHeadGUI(clickableHead);
