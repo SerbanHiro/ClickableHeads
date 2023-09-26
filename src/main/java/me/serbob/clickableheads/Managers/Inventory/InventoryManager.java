@@ -21,7 +21,7 @@ public class InventoryManager {
         test.add("Stats: "+player.getStatistic(Statistic.valueOf("PLAY_ONE_MINUTE")));
 
         ClickableHead clickableHead = new ClickableHead(player,player.getName(),test);
-        OfflinePlayer dummyPlayer = Bukkit.getOfflinePlayer("Spectetor");
+        OfflinePlayer dummyPlayer = Bukkit.getOfflinePlayer("Xicz_");
         ClickableHead dummyClickableHead = new ClickableHead(dummyPlayer,dummyPlayer.getName(), Arrays.asList("Dummy test player"));
 
         inventory.setItem(4, clickableHead.getHead());

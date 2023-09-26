@@ -95,7 +95,7 @@ public class TemplateManager {
 
         return input;
     }
-    private static String formatStatistic(Statistic statistic, double rawValue) {
+    public static String formatStatistic(Statistic statistic, double rawValue) {
         switch (statistic) {
             case WALK_ONE_CM:
             case CLIMB_ONE_CM:
