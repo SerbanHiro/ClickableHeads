@@ -1,5 +1,6 @@
 package me.serbob.clickableheads.Managers.Utils;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.serbob.clickableheads.APIs.Vault.EconomyHook;
 import me.serbob.clickableheads.ClickableHeads;
 import me.serbob.clickableheads.Utils.Logger;
@@ -8,13 +9,14 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+
+import static me.serbob.clickableheads.APIs.PlaceholderAPI.PlaceholderAPI.isPAPIenabled;
 
 public class TemplateManager {
     public static File templateFolder;
@@ -51,9 +53,16 @@ public class TemplateManager {
     public static String replacePlayerStatisticPlaceholder(OfflinePlayer player, String input) {
         input = input.replace("{playerName}",player.getName());
         //System.out.println(getTotalBlocksMined(player)+"");
-        while (input.contains("{") && input.contains("}")) {
-            int startIndex = input.indexOf("{");
-            int endIndex = input.indexOf("}");
+        while (input.contains("{") && input.contains("}") || input.contains("%")) {
+            int startIndex;
+            int endIndex;
+            if(input.contains("{") && input.contains("}")) {
+                startIndex = input.indexOf("{");
+                endIndex = input.indexOf("}");
+            } else {
+                startIndex = input.indexOf("%");
+                endIndex = input.indexOf("%",startIndex+1);
+            }
 
             if (startIndex < endIndex) {
                 String placeholder = input.substring(startIndex, endIndex + 1);
@@ -62,34 +71,50 @@ public class TemplateManager {
                 try {
                     Statistic statistic;
                     String formattedValue;
-                    switch (statisticName.toUpperCase()) {
-                        case "MINE_BLOCK":
-                            formattedValue = formatDouble(getTotalBlocksMined(player));
-                            break;
-                        case "KILL_ENTITY":
-                            formattedValue = formatDouble(getTotalMobsKilled(player));
-                            break;
-                        case "PLACED_BLOCK":
-                            formattedValue = formatDouble(getTotalBlocksPlaced(player));
-                            break;
-                        case "BALANCE":
-                            formattedValue = " ";
-                            if(EconomyHook.isVaultEnabled()) {
-                                formattedValue = EconomyHook.getFormattedMoney(player);
-                            }
-                            break;
-                        default:
-                            statistic = Statistic.valueOf(statisticName.toUpperCase());
-                            double rawValue = player.getStatistic(statistic);
-                            formattedValue = formatStatistic(statistic, rawValue);
-                            break;
+                    if (isPAPIenabled()) {
+                        try {
+                            String parsedPlaceholder = PlaceholderAPI.setPlaceholders(player, "%"+statisticName+"%");
+                            formattedValue = parsedPlaceholder;
+                        } catch (Exception ignored) {
+                            formattedValue = "";
+                        }
+                    } else {
+                        formattedValue = " ";
                     }
-                    input = input.replace(placeholder, formattedValue);
+                    formattedValue=formattedValue.replace("%","");
+                    if(formattedValue.equalsIgnoreCase(statisticName)) {
+                        switch (statisticName.toUpperCase()) {
+                            case "MINE_BLOCK":
+                                formattedValue = formatDouble(getTotalBlocksMined(player));
+                                break;
+                            case "KILL_ENTITY":
+                                formattedValue = formatDouble(getTotalMobsKilled(player));
+                                break;
+                            case "PLACED_BLOCK":
+                                formattedValue = formatDouble(getTotalBlocksPlaced(player));
+                                break;
+                            case "BALANCE":
+                                formattedValue = " ";
+                                if (EconomyHook.isVaultEnabled()) {
+                                    formattedValue = EconomyHook.getFormattedMoney(player);
+                                }
+                                break;
+                            default:
+                                statistic = Statistic.valueOf(statisticName.toUpperCase());
+                                double rawValue = player.getStatistic(statistic);
+                                formattedValue = formatStatistic(statistic, rawValue);
+                                break;
+                        }
+                        input = input.replace(placeholder, formattedValue);
+                    } else {
+                        input = input.replace(placeholder, formattedValue);
+                    }
                 } catch (Exception ignored){
                     input = input.replace(placeholder, "");
                 }
             } else {
                 input = input.replace("}", "");
+                input = input.replace("%","");
             }
         }
 
