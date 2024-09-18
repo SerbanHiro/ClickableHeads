@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ClickableHeads.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ClickableHeads.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/me.serbob.ClickableHeads.main.iml" filepath="$PROJECT_DIR$/.idea/modules/me.serbob.ClickableHeads.main.iml" />
     </modules>
   </component>
 </project>
