@@ -43,15 +43,12 @@ public class ClickableHeadsEvent implements Listener {
             OfflinePlayer target=Core.checkSkull(item);
             //System.out.println(target.getPlayer().getName());
             if(target!=null) {
-                System.out.println("target is not null");
                 ClickableHead clickableHead = new ClickableHead(
                         target,
                         target.getName(),
                         Collections.emptyList()
                 );
-                System.out.println("target initialization");
                 if (clickableHead.isClickableHead()) {
-                    System.out.println("is indeed a ch");
                     clickableHead.initializeGUI(new MainHolder(), 36, "              Statistics");
 
                     //generateClickableHeadGUI(clickableHead);
@@ -63,9 +60,11 @@ public class ClickableHeadsEvent implements Listener {
                     clickableHead.openGUI(player);
                 }
             }
+
             if(ChatColor.stripColor(item.getItemMeta().getDisplayName()).equalsIgnoreCase("back")) {
                 InventoryManager.openGUI(player);
             }
+
             event.setCancelled(true);
         }
     }
