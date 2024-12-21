@@ -1,80 +1,109 @@
 package me.serbob.clickableheads.Classes;
 
-import me.serbob.clickableheads.ClickableHeads;
 import me.serbob.clickableheads.Managers.VersionManager;
 import me.serbob.clickableheads.Utils.GlobalUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class ClickableHead {
-    private Inventory GUI;
-    private final OfflinePlayer player;
+    private static final Map<String, Consumer<InventoryClickEvent>> clickHandlers = new WeakHashMap<>();
+
     private final ItemStack head;
-    private final String name;
-    private final List<String> lore;
-    public ClickableHead(OfflinePlayer player,
-                         String name,
-                         List<String> lore
-                          ) {
-        GUI=null;
-        this.player=player;
-        this.name=player==null?"Name is null":name;
-        this.lore=player==null?Collections.emptyList():lore;
-        head=player==null?invalidHead():getAllVersionsSkull(player,name,lore);
+    private final OfflinePlayer player;
+    private String name;
+    private List<String> lore;
+    private Consumer<InventoryClickEvent> clickHandler;
+
+    public ClickableHead(OfflinePlayer player) {
+        this.player = player;
+        this.name = player == null ? "Name is null" : player.getName();
+        this.lore = Collections.emptyList();
+        this.head = player == null ? invalidHead() : createHead();
     }
-    public boolean isClickableHead() {
-        return head!=null;
+
+    public ClickableHead(OfflinePlayer player, String name) {
+        this.player = player;
+        this.name = name;
+        this.lore = Collections.emptyList();
+        this.head = player == null ? invalidHead() : createHead();
     }
-    public OfflinePlayer getPlayer() {
-        return player;
+
+    public ClickableHead(OfflinePlayer player, String name, List<String> lore) {
+        this.player = player;
+        this.name = name;
+        this.lore = lore;
+        this.head = player == null ? invalidHead() : createHead();
     }
-    public ItemStack getHead() {
-        return head;
+
+    public void setName(String name) {
+        this.name = name;
+        updateHeadMeta();
     }
+
     public String getName() {
         return name;
     }
+
+    public void setLore(List<String> lore) {
+        this.lore = lore;
+        updateHeadMeta();
+    }
+
     public List<String> getLore() {
         return lore;
     }
-    /**
-     * Initialize GUI, use this for showing player stats.
-     * @param inventoryHolder
-     * @param size
-     * @param title
-     */
-    public void initializeGUI(InventoryHolder inventoryHolder, int size, String title) {
-        GUI= Bukkit.createInventory(inventoryHolder,size,title);
+
+    public ItemStack getHead() {
+        return head;
     }
-    /**
-     * Add item inside the GUI after it has been initialized
-     * @param position
-     * @param itemToBeAdded
-     */
-    public void addItem(int position, ItemStack itemToBeAdded) {
-        GUI.setItem(position,itemToBeAdded);
+
+    public OfflinePlayer getPlayer() {
+        return player;
     }
-    /**
-     * Just open the GUI (
-     * @param specifiedPlayer
-     */
-    public void openGUI(Player specifiedPlayer) {
-        specifiedPlayer.openInventory(GUI);
+
+    public ClickableHead onClick(Consumer<InventoryClickEvent> handler) {
+        this.clickHandler = handler;
+        return this;
     }
-    /**
-     * Generate an invalid itemstack in case the player == null
-     * @return invalid
-     */
+
+    public void addToInventory(Inventory inventory, int slot) {
+        inventory.setItem(slot, head);
+        if (clickHandler != null) {
+            clickHandlers.put(getKey(inventory, slot), clickHandler);
+        }
+    }
+
+    private String getKey(Inventory inventory, int slot) {
+        return inventory.hashCode() + ":" + slot;
+    }
+
+    public static void handleClick(InventoryClickEvent event) {
+        String key = event.getInventory().hashCode() + ":" + event.getSlot();
+        Consumer<InventoryClickEvent> handler = clickHandlers.get(key);
+        if (handler != null) {
+            handler.accept(event);
+        }
+    }
+
+    private void updateHeadMeta() {
+        ItemMeta meta = head.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(GlobalUtil.c(name));
+            meta.setLore(GlobalUtil.colorizeList(lore));
+            head.setItemMeta(meta);
+        }
+    }
+
     private ItemStack invalidHead() {
         ItemStack invalid = new ItemStack(Material.REDSTONE);
         ItemMeta invalidMeta = invalid.getItemMeta();
@@ -82,46 +111,39 @@ public class ClickableHead {
         invalid.setItemMeta(invalidMeta);
         return invalid;
     }
-    /**
-     * This function automatically checks for the version, therefore it gives the suitable skull
-     * @param player
-     * @param name
-     * @param lore
-     * @return headItem
-     */
-    private ItemStack getAllVersionsSkull(OfflinePlayer player, String name, List<String> lore) {
+
+    private ItemStack createHead() {
         ItemStack headItem;
+        SkullMeta skullMeta;
+
         if (!VersionManager.isVersion1_12OrBelow()) {
-            // For Minecraft versions 1.13 and onwards
             headItem = new ItemStack(Material.PLAYER_HEAD);
-            SkullMeta skullMeta = (SkullMeta) headItem.getItemMeta();
-            skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()));
-            skullMeta.setDisplayName(name);
-            skullMeta.setLore(lore);
-            headItem.setItemMeta(skullMeta);
         } else {
-            // For Minecraft versions prior to 1.13
-            headItem = getSkullItem(player.getName(),
-                    name,
-                    lore);
+            headItem = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
         }
 
+        skullMeta = (SkullMeta) headItem.getItemMeta();
+
+        try {
+            Class<?> gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
+            Constructor<?> profileConstructor = gameProfileClass.getDeclaredConstructor(UUID.class, String.class);
+            Object profile = profileConstructor.newInstance(player.getUniqueId(), player.getName());
+
+            Method setProfileMethod = skullMeta.getClass().getDeclaredMethod("setProfile", gameProfileClass);
+            setProfileMethod.setAccessible(true);
+            setProfileMethod.invoke(skullMeta, profile);
+        } catch (Exception ignored) {
+            skullMeta.setOwningPlayer(player);
+        }
+
+        skullMeta.setDisplayName(GlobalUtil.c(name));
+        skullMeta.setLore(GlobalUtil.colorizeList(lore));
+        headItem.setItemMeta(skullMeta);
         return headItem;
     }
-    /**
-     * This function is used for returning skull's for versions prior to 1.13
-     * @param owner
-     * @param displayName
-     * @param lore
-     * @return skullItem
-     */
-    private ItemStack getSkullItem(String owner, String displayName, List<String> lore) {
-        ItemStack skullItem = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
-        SkullMeta skullMeta = (SkullMeta) skullItem.getItemMeta();
-        skullMeta.setOwner(owner);
-        skullMeta.setDisplayName(displayName);
-        skullMeta.setLore(lore);
-        skullItem.setItemMeta(skullMeta);
-        return skullItem;
+
+    public static void cleanup(Inventory inventory) {
+        String prefix = inventory.hashCode() + ":";
+        clickHandlers.entrySet().removeIf(entry -> entry.getKey().startsWith(prefix));
     }
 }

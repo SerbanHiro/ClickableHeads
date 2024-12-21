@@ -15,6 +15,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.WeakHashMap;
 
 import static me.serbob.clickableheads.APIs.PlaceholderAPI.PlaceholderAPI.isPAPIenabled;
 
@@ -50,76 +54,68 @@ public class TemplateManager {
             }
         }
     }
+
+ //   private static final Map<UUID, Map<String, String>> statisticCache = new WeakHashMap<>();
+
     public static String replacePlayerStatisticPlaceholder(OfflinePlayer player, String input) {
-        input = input.replace("{playerName}",player.getName());
-        //System.out.println(getTotalBlocksMined(player)+"");
-        while (input.contains("{") && input.contains("}") || input.contains("%")) {
-            int startIndex;
-            int endIndex;
-            if(input.contains("{") && input.contains("}")) {
-                startIndex = input.indexOf("{");
-                endIndex = input.indexOf("}");
-            } else {
-                startIndex = input.indexOf("%");
-                endIndex = input.indexOf("%",startIndex+1);
-            }
+     //   Map<String, String> playerCache = statisticCache.computeIfAbsent(
+       //         player.getUniqueId(), k -> new HashMap<>());
 
-            if (startIndex < endIndex) {
-                String placeholder = input.substring(startIndex, endIndex + 1);
-                String statisticName = input.substring(startIndex + 1, endIndex);
+        if (!input.contains("{") && !input.contains("%")) return input;
 
-                try {
-                    Statistic statistic;
-                    String formattedValue;
-                    if (isPAPIenabled()) {
-                        try {
-                            String parsedPlaceholder = PlaceholderAPI.setPlaceholders(player, "%"+statisticName+"%");
-                            formattedValue = parsedPlaceholder;
-                        } catch (Exception ignored) {
-                            formattedValue = "";
-                        }
-                    } else {
-                        formattedValue = " ";
-                    }
-                    formattedValue=formattedValue.replace("%","");
-                    if(formattedValue.equalsIgnoreCase(statisticName)) {
-                        switch (statisticName.toUpperCase()) {
-                            case "MINE_BLOCK":
-                                formattedValue = formatDouble(getTotalBlocksMined(player));
-                                break;
-                            case "KILL_ENTITY":
-                                formattedValue = formatDouble(getTotalMobsKilled(player));
-                                break;
-                            case "PLACED_BLOCK":
-                                formattedValue = formatDouble(getTotalBlocksPlaced(player));
-                                break;
-                            case "BALANCE":
-                                formattedValue = " ";
-                                if (EconomyHook.isVaultEnabled()) {
-                                    formattedValue = EconomyHook.getFormattedMoney(player);
-                                }
-                                break;
-                            default:
-                                statistic = Statistic.valueOf(statisticName.toUpperCase());
-                                double rawValue = player.getStatistic(statistic);
-                                formattedValue = formatStatistic(statistic, rawValue);
-                                break;
-                        }
-                        input = input.replace(placeholder, formattedValue);
-                    } else {
-                        input = input.replace(placeholder, formattedValue);
-                    }
-                } catch (Exception ignored){
-                    input = input.replace(placeholder, "");
-                }
-            } else {
-                input = input.replace("}", "");
-                input = input.replace("%","");
-            }
+        StringBuilder result = new StringBuilder(input);
+
+        replaceAllPlaceholders(result, player);
+
+        return result.toString();
+    }
+
+    private static void replaceAllPlaceholders(StringBuilder input, OfflinePlayer player) {
+        int startIndex;
+        while ((startIndex = input.indexOf("{")) != -1) {
+            int endIndex = input.indexOf("}", startIndex);
+            if (endIndex == -1) break;
+
+            String placeholder = input.substring(startIndex + 1, endIndex);
+          //  String value = cache.computeIfAbsent(placeholder,
+                //    k -> getStatisticValue(player, placeholder));
+            String value = getStatisticValue(player, placeholder);
+
+            input.replace(startIndex, endIndex + 1, value);
         }
 
-        return input;
+        if (isPAPIenabled()) {
+            String result = PlaceholderAPI.setPlaceholders(player, input.toString());
+            input.setLength(0);
+            input.append(result);
+        }
     }
+
+    private static String getStatisticValue(OfflinePlayer player, String statisticName) {
+        try {
+            switch (statisticName.toUpperCase()) {
+                case "MINE_BLOCK":
+                    return formatDouble(getTotalBlocksMined(player));
+                case "KILL_ENTITY":
+                    return formatDouble(getTotalMobsKilled(player));
+                case "PLACED_BLOCK":
+                    return formatDouble(getTotalBlocksPlaced(player));
+                case "BALANCE":
+                    return EconomyHook.isVaultEnabled() ?
+                            EconomyHook.getFormattedMoney(player) : " ";
+                default:
+                    try {
+                        Statistic statistic = Statistic.valueOf(statisticName.toUpperCase());
+                        return formatStatistic(statistic, player.getStatistic(statistic));
+                    } catch (IllegalArgumentException e) {
+                        return "";
+                    }
+            }
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     public static String formatStatistic(Statistic statistic, double rawValue) {
         switch (statistic) {
             case WALK_ONE_CM:
@@ -182,7 +178,7 @@ public class TemplateManager {
 
                 return formattedTime.toString().trim();
             case LEAVE_GAME:
-                return String.valueOf((int) rawValue); // Assuming this represents number of games quit
+                return String.valueOf((int) rawValue);
             case MOB_KILLS:
             case DROP:
             case JUMP:
@@ -237,11 +233,11 @@ public class TemplateManager {
         return totalKills;
     }
     public static int getTotalBlocksPlaced(OfflinePlayer player) {
-        Statistic statistic = Statistic.USE_ITEM; // This statistic covers block placement
+        Statistic statistic = Statistic.USE_ITEM;
         int totalPlaced = 0;
 
         for (Material material : Material.values()) {
-            if (material.isBlock()) { // Only consider block materials
+            if (material.isBlock()) {
                 totalPlaced += player.getStatistic(statistic, material);
             }
         }

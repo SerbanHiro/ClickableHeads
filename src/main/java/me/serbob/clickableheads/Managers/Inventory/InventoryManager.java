@@ -1,32 +1,27 @@
 package me.serbob.clickableheads.Managers.Inventory;
 
-import me.serbob.clickableheads.Classes.ClickableHead;
-import me.serbob.clickableheads.Managers.VersionManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class InventoryManager {
-    public static void openGUI(Player player) {
-        Inventory inventory = Bukkit.createInventory(new MainHolder(),9,"Test");
+    private static final Map<UUID, Inventory> activeInventories = new HashMap<>();
 
-        List<String> test = new ArrayList<>();
-        test.add("Stats: "+player.getStatistic(Statistic.valueOf("PLAY_ONE_MINUTE")));
+    public static void registerInventory(Player player, Inventory inventory) {
+        activeInventories.put(player.getUniqueId(), inventory);
+    }
 
-        ClickableHead clickableHead = new ClickableHead(player,player.getName(),test);
-        OfflinePlayer dummyPlayer = Bukkit.getOfflinePlayer("Xicz_");
-        ClickableHead dummyClickableHead = new ClickableHead(dummyPlayer,dummyPlayer.getName(), Arrays.asList("Dummy test player"));
+    public static void unregisterInventory(Player player) {
+        activeInventories.remove(player.getUniqueId());
+    }
 
-        inventory.setItem(4, clickableHead.getHead());
-        inventory.setItem(5,dummyClickableHead.getHead());
+    public static Inventory getPlayerInventory(Player player) {
+        return activeInventories.get(player.getUniqueId());
+    }
 
-        player.openInventory(inventory);
+    public static boolean hasActiveInventory(Player player) {
+        return activeInventories.containsKey(player.getUniqueId());
     }
 }

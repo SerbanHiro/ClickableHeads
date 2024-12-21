@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Core {
-    public static ItemStack createItem(Material material, String title, List<String> lore) {
+    /*public static ItemStack createItem(Material material, String title, List<String> lore) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(GlobalUtil.c(title));
@@ -54,5 +54,5 @@ public class Core {
                 );
             }
         }
-    }
+    }*/
 }

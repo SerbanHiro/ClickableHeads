@@ -1,4 +1,4 @@
-package me.serbob.clickableheads.Managers.Inventory;
+package me.serbob.clickableheads.example.gui;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;

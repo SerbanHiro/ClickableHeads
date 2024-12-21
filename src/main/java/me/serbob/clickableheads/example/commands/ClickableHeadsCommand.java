@@ -1,8 +1,7 @@
-package me.serbob.clickableheads.Commands;
+package me.serbob.clickableheads.example.commands;
 
-import me.serbob.clickableheads.Managers.Inventory.InventoryManager;
+import me.serbob.clickableheads.example.gui.ExampleGUI;
 import me.serbob.clickableheads.Utils.GlobalUtil;
-import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +19,7 @@ public class ClickableHeadsCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player) sender;
-        InventoryManager.openGUI(player);
+        ExampleGUI.openGUI(player);
         return true;
     }
 }
