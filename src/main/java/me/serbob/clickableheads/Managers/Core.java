@@ -1,7 +1,20 @@
 package me.serbob.clickableheads.Managers;
 
+import me.serbob.clickableheads.Managers.Utils.TemplateManager;
+import me.serbob.clickableheads.Utils.GlobalUtil;
+import me.serbob.clickableheads.objectholders.ClickableHead;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Core {
-    /*public static ItemStack createItem(Material material, String title, List<String> lore) {
+    public static ItemStack createItem(Material material, String title, List<String> lore) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(GlobalUtil.c(title));
@@ -39,5 +52,5 @@ public class Core {
                 );
             }
         }
-    }*/
+    }
 }

@@ -2,14 +2,18 @@ package me.serbob.clickableheads.objectholders;
 
 import me.serbob.clickableheads.Managers.VersionManager;
 import me.serbob.clickableheads.Utils.GlobalUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -24,6 +28,8 @@ public class ClickableHead {
     private String name;
     private List<String> lore;
     private Consumer<InventoryClickEvent> clickHandler;
+
+    private Inventory GUI;
 
     public ClickableHead(OfflinePlayer player) {
         this.player = player;
@@ -114,16 +120,7 @@ public class ClickableHead {
     }
 
     private ItemStack createHead() {
-        ItemStack skull = new ItemStack(Material.LEGACY_SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
-        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-
-        skullMeta.setOwner(player.getName());
-        skullMeta.setDisplayName(GlobalUtil.c(name));
-        skullMeta.setLore(GlobalUtil.colorizeList(lore));
-        skull.setItemMeta(skullMeta);
-
-        return skull;
- /*       ItemStack headItem;
+        ItemStack headItem;
         SkullMeta skullMeta;
 
         if (!VersionManager.isVersion1_12OrBelow()) {
@@ -134,6 +131,9 @@ public class ClickableHead {
 
         skullMeta = (SkullMeta) headItem.getItemMeta();
 
+        skullMeta.setOwnerProfile(player.getPlayerProfile());
+        skullMeta.setOwningPlayer(player);
+        skullMeta.setOwner(player.getName());
         try {
             Class<?> gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
             Constructor<?> profileConstructor = gameProfileClass.getDeclaredConstructor(UUID.class, String.class);
@@ -149,7 +149,23 @@ public class ClickableHead {
         skullMeta.setDisplayName(GlobalUtil.c(name));
         skullMeta.setLore(GlobalUtil.colorizeList(lore));
         headItem.setItemMeta(skullMeta);
-        return headItem;*/
+        return headItem;
+    }
+
+    public boolean isClickableHead() {
+        return (this.head != null);
+    }
+
+    public void initializeGUI(InventoryHolder inventoryHolder, int size, String title) {
+        this.GUI = Bukkit.createInventory(inventoryHolder, size, title);
+    }
+
+    public void addItem(int position, ItemStack itemToBeAdded) {
+        this.GUI.setItem(position, itemToBeAdded);
+    }
+
+    public void openGUI(Player specifiedPlayer) {
+        specifiedPlayer.openInventory(this.GUI);
     }
 
     public static void cleanup(Inventory inventory) {
