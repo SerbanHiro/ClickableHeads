@@ -1,6 +1,6 @@
 package me.serbob.clickableheads.example.listener;
 
-import me.serbob.clickableheads.Classes.ClickableHead;
+import me.serbob.clickableheads.objectholders.ClickableHead;
 import me.serbob.clickableheads.example.gui.MainHolder;
 import me.serbob.clickableheads.example.gui.ExampleGUI;
 import org.bukkit.ChatColor;

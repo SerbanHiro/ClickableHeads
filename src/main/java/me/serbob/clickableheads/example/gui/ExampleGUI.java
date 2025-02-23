@@ -1,9 +1,8 @@
 package me.serbob.clickableheads.example.gui;
 
-import me.serbob.clickableheads.Classes.ClickableHead;
+import me.serbob.clickableheads.objectholders.ClickableHead;
 import me.serbob.clickableheads.Managers.gui.TemplateGUI;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

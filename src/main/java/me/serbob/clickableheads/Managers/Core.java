@@ -1,20 +1,5 @@
 package me.serbob.clickableheads.Managers;
 
-import me.serbob.clickableheads.Classes.ClickableHead;
-import me.serbob.clickableheads.Managers.Utils.TemplateManager;
-import me.serbob.clickableheads.Utils.GlobalUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Core {
     /*public static ItemStack createItem(Material material, String title, List<String> lore) {
         ItemStack itemStack = new ItemStack(material);
