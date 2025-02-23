@@ -11,12 +11,13 @@ import java.util.*;
 
 public class ExampleGUI {
     public static void openGUI(Player player) {
-        Inventory inventory = Bukkit.createInventory(new MainHolder(), 9, "Test");
+        MainHolder mainHolder = new MainHolder();
+        Inventory inventory = Bukkit.createInventory(mainHolder, 9, "Test");
 
         new ClickableHead(player, "&e" + player.getName(),
                 Arrays.asList("Stats: " + player.getStatistic(Statistic.valueOf("PLAY_ONE_MINUTE"))))
                 .onClick(event -> {
-                    new TemplateGUI("example.yml", "              Statistics", 36, player)
+                    new TemplateGUI("example.yml", "              Statistics", 36, player, mainHolder)
                             .open(player);
                 })
                 .addToInventory(inventory, 4);
@@ -25,7 +26,7 @@ public class ExampleGUI {
                 Arrays.asList("Dummy test player"))
                 .onClick(event -> {
                     new TemplateGUI("example.yml", "              Statistics", 36,
-                            Bukkit.getOfflinePlayer("Xicz_"))
+                            Bukkit.getOfflinePlayer("Xicz_"), mainHolder)
                             .open(player);
                 })
                 .addToInventory(inventory, 5);

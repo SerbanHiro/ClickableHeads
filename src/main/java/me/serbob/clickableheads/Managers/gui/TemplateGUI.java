@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -22,8 +23,14 @@ public class TemplateGUI {
     private final YamlConfiguration config;
     private final OfflinePlayer target;
 
-    public TemplateGUI(String templateName, String title, int size, OfflinePlayer target) {
-        this.inventory = Bukkit.createInventory(new MainHolder(), size, title);
+    public TemplateGUI(
+            String templateName,
+            String title,
+            int size,
+            OfflinePlayer target,
+            InventoryHolder holder
+    ) {
+        this.inventory = Bukkit.createInventory(holder, size, title);
         this.config = TemplateManager.getTemplate(templateName);
         this.target = target;
         setupItems();

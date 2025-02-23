@@ -4,6 +4,7 @@ import me.serbob.clickableheads.Managers.VersionManager;
 import me.serbob.clickableheads.Utils.GlobalUtil;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.SkullType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -113,7 +114,16 @@ public class ClickableHead {
     }
 
     private ItemStack createHead() {
-        ItemStack headItem;
+        ItemStack skull = new ItemStack(Material.LEGACY_SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
+        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+
+        skullMeta.setOwner(player.getName());
+        skullMeta.setDisplayName(GlobalUtil.c(name));
+        skullMeta.setLore(GlobalUtil.colorizeList(lore));
+        skull.setItemMeta(skullMeta);
+
+        return skull;
+ /*       ItemStack headItem;
         SkullMeta skullMeta;
 
         if (!VersionManager.isVersion1_12OrBelow()) {
@@ -139,7 +149,7 @@ public class ClickableHead {
         skullMeta.setDisplayName(GlobalUtil.c(name));
         skullMeta.setLore(GlobalUtil.colorizeList(lore));
         headItem.setItemMeta(skullMeta);
-        return headItem;
+        return headItem;*/
     }
 
     public static void cleanup(Inventory inventory) {
