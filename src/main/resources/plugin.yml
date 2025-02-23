@@ -2,6 +2,7 @@ name: ClickableHeads
 version: '${version}'
 main: me.serbob.clickableheads.ClickableHeads
 api-version: '1.13'
+folia-supported: true
 commands:
   clickableheads:
     permission: clickableheads.test

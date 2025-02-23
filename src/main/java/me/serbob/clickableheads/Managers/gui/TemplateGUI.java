@@ -33,27 +33,24 @@ public class TemplateGUI {
         if (config == null) return;
 
         for (String key : config.getConfigurationSection("gui").getKeys(false)) {
-            CompletableFuture.runAsync(() -> {
-                int position = config.getInt("gui." + key + ".position");
-                Material material = Material.valueOf(config.getString("gui." + key + ".material"));
-                String name = config.getString("gui." + key + ".name");
-                List<String> lore = config.getStringList("gui." + key + ".lore");
+            int position = config.getInt("gui." + key + ".position");
+            Material material = Material.valueOf(config.getString("gui." + key + ".material"));
+            String name = config.getString("gui." + key + ".name");
+            List<String> lore = config.getStringList("gui." + key + ".lore");
 
-                ItemStack item = new ItemStack(material);
-                ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(GlobalUtil.c(TemplateManager.replacePlayerStatisticPlaceholder(target, name)));
+            ItemStack item = new ItemStack(material);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(GlobalUtil.c(TemplateManager.replacePlayerStatisticPlaceholder(target, name)));
 
-                List<String> formattedLore = new ArrayList<>();
-                for (String line : lore) {
-                    formattedLore.add(GlobalUtil.c(TemplateManager.replacePlayerStatisticPlaceholder(target, line)));
-                }
-                meta.setLore(formattedLore);
-                item.setItemMeta(meta);
+            List<String> formattedLore = new ArrayList<>();
+            for (String line : lore) {
+                formattedLore.add(GlobalUtil.c(TemplateManager.replacePlayerStatisticPlaceholder(target, line)));
+            }
+            meta.setLore(formattedLore);
+            item.setItemMeta(meta);
 
-                Bukkit.getScheduler().runTask(ClickableHeads.instance, () -> {
-                    inventory.setItem(position, item);
-                });
-            });
+
+            inventory.setItem(position, item);
         }
     }
 
